@@ -13,7 +13,15 @@ export async function middleware(request: NextRequest) {
   }
 
   const storageType = process.env.NEXT_PUBLIC_STORAGE_TYPE || 'localstorage';
-
+  // 修改前：所有 /api 路径都被拦截
+  // 修改后：允许登录相关 API 通过
+  const noAuthPaths = [
+    '/login',
+    '/warning',
+    '/api/login',        // ✅ 新增
+    '/api/register',     // ✅ 新增
+    '/api/debug-login',  // ✅ 新增
+  ];
   // 如果没有设置密码，直接放行
   if (storageType === 'localstorage' && !process.env.PASSWORD) {
     return NextResponse.next();
